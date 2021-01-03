@@ -13,24 +13,32 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 func main() {
-	// User inputs the extension number via the -extNum argument.
-	var extNum string
-	flag.StringVar(&extNum, "extNum", "", "Extension Number.")
+	var start string
+	flag.StringVar(&start, "start", "", "Starting number.")
 
-	// Same as above but with -fileName
-	var fileName string
-	flag.StringVar(&fileName, "fileName", "", "File Name.")
+	var end string
+	flag.StringVar(&end, "end", "", "Ending number.")
 
 	flag.Parse()
 
-	err := DownloadFile(fileName + ".xpi", "https://addons.mozilla.org/firefox/downloads/file/" + extNum)
+	s, err := strconv.Atoi(start)
+	e, err := strconv.Atoi(end)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Downloaded " + fileName + ".xpi")
+
+	for i := s; i <= e; i++ {
+		num := strconv.Itoa(i)
+		err := DownloadFile(num + ".xpi", "https://addons.mozilla.org/firefox/downloads/file/" + num)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("Downloaded " + num + ".xpi")
+	}
 }
 
 // DownloadFile will download a url to a local file
