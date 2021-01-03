@@ -8,6 +8,7 @@ and saves them as a .xpi file.
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -15,17 +16,15 @@ import (
 )
 
 func main() {
-	// Asks user for extension number and saves it as `extNum`
-	// TODO: Make it so the user can search up the name and not look for the number needed.
-	fmt.Println("Please input the extension number:")
+	// User inputs the extension number via the -extNum argument.
 	var extNum string
-	fmt.Scanln(&extNum)
+	flag.StringVar(&extNum, "extNum", "", "Extension Number.")
 
-	// Asks user what to name said file to fileName
-	// TODO: Automatically figure out the file name.
-	fmt.Println("Input file name (.xpi is applied automatically)")
+	// Same as above but with -fileName
 	var fileName string
-	fmt.Scanln(&fileName)
+	flag.StringVar(&fileName, "fileName", "", "File Name.")
+
+	flag.Parse()
 
 	err := DownloadFile(fileName + ".xpi", "https://addons.mozilla.org/firefox/downloads/file/" + extNum)
 	if err != nil {
